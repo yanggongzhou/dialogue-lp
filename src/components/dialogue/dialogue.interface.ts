@@ -1,7 +1,8 @@
 
 export enum TypeEnum {
   文本 = 1,
-  图片 = 2
+  图片 = 2,
+  选项 = 3
 }
 
 export enum DirectionEnum {

@@ -13,7 +13,7 @@
             <img class="avatar" width="45" height="45" :src="message.direction===DirectionEnum.主人? ownerAvatarUrl: contactAvatarUrl"
                  alt="">
             <!-- 文本 -->
-            <div class="text" v-emotion="message.content" v-if="message.type===TypeEnum.文本"></div>
+            <div v-if="message.type===TypeEnum.文本" v-emotion="message.content" class="text"></div>
 
             <!-- 图片 -->
             <div class="text" v-else-if="message.type===TypeEnum.图片">
@@ -28,7 +28,7 @@
 
 <script lang="ts" setup>
 
-import { onMounted, defineProps, watch, ref, nextTick } from "vue";
+import { onMounted, defineProps, watch, ref, nextTick, PropType } from "vue";
 import { IDataSource, DirectionEnum, TypeEnum } from "@/components/dialogue/dialogue.interface";
 const props = defineProps({
   contactNickname: {
@@ -36,7 +36,7 @@ const props = defineProps({
     default: 'Handsome man'
   },
   dataSource: {
-    type: Array,
+    type: Array as PropType<IDataSource[]>,
     required: true,
     default: [] as IDataSource[]
   },
@@ -79,7 +79,7 @@ const chatClick = () => {
   }
 
   nextTick(() => {
-    const targetDom = document.querySelector('.message').lastElementChild
+    const targetDom = document.querySelector('.message')?.lastElementChild
     if (targetDom && targetDom.scrollIntoView) {
       targetDom.scrollIntoView(true)
     }
