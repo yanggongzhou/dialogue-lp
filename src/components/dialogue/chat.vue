@@ -1,5 +1,5 @@
 <template>
-  <div @click="chatClick" class="chat-warp" :style="{backgroundColor: wrapBg}">
+  <div v-waves @click="chatClick" class="chat-warp" :style="{backgroundColor: wrapBg}">
     <div class="chat-header" v-if="list && list.length>0">
       <p> {{ contactNickname }}</p>
     </div>
@@ -27,7 +27,6 @@
 </template>
 
 <script lang="ts" setup>
-
 import { onMounted, defineProps, watch, ref, nextTick, PropType } from "vue";
 import { IDataSource, DirectionEnum, TypeEnum } from "@/components/dialogue/dialogue.interface";
 const props = defineProps({
