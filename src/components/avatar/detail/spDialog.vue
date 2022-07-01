@@ -1,5 +1,9 @@
 <template>
-  <div class="p-dialog-box">
+  <div
+    class="p-dialog-box"
+    :class="position === PositionEnum.left ? 'dialogLeft' : 'dialogRight'"
+  >
+    <img class="dialog-bg" src="../../../assets/spImg/dialog.png" alt="">
     <div class="chapter-name">{{ data.roleName || '' }}</div>
     <div class="dialog-content">
       {{ txt }}
@@ -12,11 +16,16 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref, defineProps, defineEmits, watch } from "vue";
+import { onMounted, ref, defineProps, defineEmits, watch, PropType } from "vue";
+import { PositionEnum } from "@/components/avatar/avatar.interface";
 
 const props = defineProps({
   data: Object,
   chatInfo: Object,
+  position: {
+    type: Number as PropType<PositionEnum>,
+    default: PositionEnum.left
+  }
 })
 
 const emits = defineEmits(['selectChange'])
@@ -56,12 +65,16 @@ const setTxt = (text: string) => {
   position: absolute;
   width: 100%;
   left: 0;
-  top: 7.9rem;
+  top: 0;
   z-index: 999;
-  background: url("../../../assets/spImg/dialog.png") no-repeat;
-  background-size: 90% 100%;
-  background-position: 50% 50%;
   box-sizing: border-box;
+  .dialog-bg {
+    position: absolute;
+    width: 6.8rem;
+    height: 2.62rem;
+    z-index: 1;
+    left: calc(50% - 3.4rem);
+  }
   .chapter-name {
     width: 2.1rem;
     height: 0.4rem;
@@ -71,14 +84,18 @@ const setTxt = (text: string) => {
     position: absolute;
     top: 0.48rem;
     color: #FFF;
-    left: calc(50% - 1.5rem);
+
     text-align: center;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    z-index: 9;
   }
   .dialog-content {
-    margin: 1rem 12% 0.10rem;
+    position: absolute;
+    z-index: 9;
+    left: calc(50% - 2.88rem);
+    top: 1rem;
     width: 5.76rem;
     font-size: 0.32rem;
     font-weight: 500;
@@ -105,6 +122,22 @@ const setTxt = (text: string) => {
       display: flex;
       align-items: center;
     }
+  }
+}
+.dialogLeft {
+  .dialog-bg {
+    transform: scaleX(1);
+  }
+  .chapter-name{
+    left: 2.25rem;
+  }
+}
+.dialogRight {
+  .dialog-bg {
+   transform: scaleX(-1);
+  }
+  .chapter-name{
+    right: 2.25rem;
   }
 }
 </style>

@@ -49,7 +49,7 @@ const setTxt = (text: string) => {
   left: calc(50% - 3.19rem);
   padding: 0.5rem 0.56rem 0.34rem;
   box-sizing: border-box;
-  top: 7.44rem;
+  top: calc(50% - 1.38rem);
   z-index: 999;
   background: url("../../../assets/spImg/action.png") no-repeat;
   background-size: contain;

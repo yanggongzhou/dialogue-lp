@@ -3,13 +3,7 @@
     <div class="scene-content">{{ nodeData.scene_content }}</div>
 
     <div class="snow" v-for="val in 50" :key="val"></div>
-    <!--    对话-->
-    <SpDialog
-      v-show="nodeData.type === 'chat' || nodeData.type === 'select_chat'"
-      :chatInfo="chat_info"
-      :data="nodeData"
-      @selectChange="selectChange"
-    />
+
     <!--    选择装扮-->
     <SpChoiceLook
       v-if="['select_role_skin', 'select_role_hair', 'select_role_cloth'].indexOf(nodeData.type) !== -1"
@@ -22,7 +16,20 @@
       v-show="nodeData.type === 'action'"
       :content="nodeData.content"
     />
-    <AvatarItem v-show="isShowAvatar" :data-source="dataSource" :width="6" :position="nodeData?.pos_id ? PositionEnum[nodeData?.pos_id] : PositionEnum.left"></AvatarItem>
+    <AvatarItem
+      v-show="isShowAvatar"
+      :data-source="dataSource"
+      :width="5.5"
+      :position="nodeData?.pos_id ? PositionEnum[nodeData?.pos_id] : PositionEnum.left">
+      <!--    对话-->
+      <SpDialog
+        v-show="nodeData.type === 'chat' || nodeData.type === 'select_chat'"
+        :chatInfo="chat_info"
+        :data="nodeData"
+        @selectChange="selectChange"
+        :position="nodeData?.pos_id ? PositionEnum[nodeData?.pos_id] : PositionEnum.left"
+      />
+    </AvatarItem>
   </div>
 </template>
 
@@ -83,6 +90,7 @@ const choiceLookEvent = (state: 'left' | 'right') => {
 
 // 下一个节点
 const nextNode = () => {
+  if (nodeData.value.type === 'select_chat') return;
   nodeData.value = chat_info[nodeData.value.next_id]
   console.log('startData--------->', nodeData.value.type)
   // console.log(JSON.stringify(nodeData.value));
@@ -93,6 +101,7 @@ const nextNode = () => {
 // 对话选项
 const selectChange = (optionKey: string) => {
   nodeData.value = chat_info[chat_info[optionKey].next_id]
+  updateNode();
 }
 
 </script>
@@ -102,7 +111,8 @@ const selectChange = (optionKey: string) => {
 .avatar-warp {
   width: 100%;
   height: 100%;
-  box-shadow: 0 1px 4px #00152914;
+  overflow: hidden;
+
   .scene-content {
     position: absolute;
     top: 5%;
