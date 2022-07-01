@@ -5,3 +5,8 @@ export interface IAvatar {
   hair?: string;
   backext?: string;
 }
+
+export enum PositionEnum {
+  left = 1,
+  right = 2
+}

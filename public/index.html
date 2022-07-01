@@ -14,7 +14,7 @@
                 recalc = function () {
                     var clientWidth = docEl.clientWidth;
                     if (!clientWidth) return;
-                    docEl.style.fontSize = 100 * (clientWidth / 360) + 'px';
+                    docEl.style.fontSize = 100 * (clientWidth / 750) + 'px';
                     if (clientWidth >= 720) docEl.style.fontSize = '200px';
                 };
             recalc();

@@ -17,21 +17,24 @@ watch(() => props.content, (value) => {
   if (value) setTxt(value)
 })
 const txt = ref('')
-
+const timer = ref<number>();
 onMounted(() => {
   if (props.content) setTxt(props.content)
 })
 
 const setTxt = (text: string) => {
+  clearInterval(timer.value);
   txt.value = '';
-  const textData = text.split('');
-  const timer = setInterval(() => {
+  const textData = text.split(' ');
+  let i = 0
+  timer.value = setInterval(() => {
     if (txt.value.length < text.length) {
-      txt.value += textData[txt.value.length]
+      txt.value += textData[i] + ' '
+      i++;
     } else {
-      clearInterval(timer);
+      clearInterval(timer.value);
     }
-  }, 20);
+  }, 50);
 }
 
 </script>
@@ -41,17 +44,21 @@ const setTxt = (text: string) => {
   min-height: 100px;
   box-shadow: 0 1px 4px #00152914;
   position: absolute;
-  width: 100%;
-  left: 0;
-  top: 50%;
+  width: 6.38rem;
+  height: 2.76rem;
+  left: calc(50% - 3.19rem);
+  padding: 0.5rem 0.56rem 0.34rem;
+  box-sizing: border-box;
+  top: 7.44rem;
   z-index: 999;
   background: url("../../../assets/spImg/action.png") no-repeat;
-  background-size: 90% 100%;
-  background-position: 50% 50%;
-  box-sizing: border-box;
+  background-size: contain;
   .dialog-content {
-    margin: 20px 12% 10px;
-    font-size: 13px;
+    width: 100%;
+    font-size: 0.32rem;
+    font-weight: 500;
+    color: #2B2B2B;
+    line-height: 0.48rem;
   }
 }
 </style>
