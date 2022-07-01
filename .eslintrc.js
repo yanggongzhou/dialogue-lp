@@ -15,6 +15,7 @@ module.exports = {
     ecmaVersion: 2020
   },
   rules: {
+    camelcase: 'off',
     'vue/multi-word-component-names': 0,
     'object-property-newline': 'off',
     'object-curly-newline': 'off',
