@@ -1,12 +1,14 @@
 <template>
-  <Chat
-    :dataSource="chatData"
-    :showShade="false"
-    :contactNickname="'21.40'"
-    :ownerAvatarUrl="ownerAvatarUrl"
-    :contactAvatarUrl="contactAvatarUrl"
-    :wrapBg="'#efefef'"
-  />
+  <div class="dialogBox">
+    <Chat
+      :dataSource="chatData"
+      :showShade="false"
+      :contactNickname="'21.40'"
+      :ownerAvatarUrl="ownerAvatarUrl"
+      :contactAvatarUrl="contactAvatarUrl"
+      :wrapBg="'#efefef'"
+    />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -31,3 +33,8 @@ const chatData = ref<IDataSource[]>([
   // { direction: DirectionEnum.主人, id: 1, type: TypeEnum.选项, content: '你好!![呲牙]', ctime: '6月21日 16:35' },
 ]);
 </script>
+<style lang="less" scoped>
+.dialogBox {
+
+}
+</style>

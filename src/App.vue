@@ -1,6 +1,6 @@
 <template>
-<!--  <Dialogue/>-->
-  <Avatar/>
+  <Dialogue/>
+<!--  <Avatar/>-->
 </template>
 
 <script lang="ts">
