@@ -49,7 +49,7 @@
             {{ message?.choiceTitle }}
           </div>
           <div class="choose-content">
-            <div class="choose-option" v-for="(opt, ind) in message.content" :key="ind" v-waves @click.stop="optClick(opt.nextId, message.id)">
+            <div class="choose-option" v-for="(opt, ind) in message.content" :key="ind" v-waves @click.stop="optClick(opt, message.id)">
               {{ opt.option }}
             </div>
           </div>
@@ -75,6 +75,7 @@ import { defineEmits, defineProps, nextTick, onMounted, PropType, ref } from "vu
 import { DirectionEnum, IDataSource, TypeEnum } from "@/components/dialogue/dialogue.interface";
 import audioUrl from '@/assets/default_bgm.mp3'
 import TapTip from './tapToContinue.vue'
+import { gostoryLog } from "@/utils/client";
 
 const props = defineProps({
   bookName: {
@@ -147,6 +148,9 @@ const chatClick = (flag?: boolean) => {
       musicRef.value.currentTime = 0;
       musicRef.value.play();
     }
+    await gostoryLog({ action: 3 }, 'story_user_click')
+  } else {
+    await gostoryLog({ action: 3 }, 'story_auto_click')
   }
 
   if (list.value[list.value.length - 1].direction === DirectionEnum.选项) return;
@@ -169,7 +173,8 @@ const chatClick = (flag?: boolean) => {
 
 const optClickIds: Array<string | number> = [];
 // 选项点击
-const optClick = (nextId: string | number, id: string | number) => {
+const optClick = (opt: {nextId: string | number; option: string}, id: string | number) => {
+  const { nextId, option } = opt;
   // 防止再点
   if (optClickIds.indexOf(id) !== -1) {
     chatClick()
@@ -180,9 +185,11 @@ const optClick = (nextId: string | number, id: string | number) => {
   const append = props.dataSource?.find(val => val.id === nextId);
   if (append) {
     list.value = [...list.value, append ]
+    await gostoryLog({ action: 3 }, 'story_user_click')
   } else {
     isShowFooter.value = true;
     emits('playNow')
+    await gostoryLog({ chooseBtn: option, action: 2 }, 'luodiyelogClick_click_gostory_selectbtn')
   }
   scrollDown()
 }
