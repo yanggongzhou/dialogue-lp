@@ -1,5 +1,7 @@
 <template>
   <div class="chat-warp" @click="chatClick()">
+<!--    遮罩-->
+    <div class="zhezhao"></div>
     <audio ref="musicRef" preload loop autoplay v-show="false">
       <source :src="audioUrl" type="audio/mpeg">
     </audio>
@@ -26,10 +28,11 @@
             <p class="role-name" v-show="message.direction">
               {{ message.direction===DirectionEnum.主人? owner.name : contact.name }}
             </p>
-            <div v-if="message.type===TypeEnum.文本" v-emotion="message.content" class="text"></div>
+            <div v-if="message.type===TypeEnum.对话" class="text">{{ message.content }}</div>
+            <div v-else-if="message.type===TypeEnum.独白" class="monologue">{{ message.content }}</div>
             <!-- 图片 -->
             <div class="text" v-else-if="message.type===TypeEnum.图片">
-              <img :src="message.content" class="image" alt="聊天图片">
+              <img :src="message.content" class="image" alt="">
             </div>
           </div>
         </div>
@@ -43,32 +46,32 @@
             <i></i>
           </div>
           <div class="choose-title">
-            What choices will you make?
+            {{ message?.choiceTitle }}
           </div>
           <div class="choose-content">
-            <div class="choose-option" v-for="(opt, ind) in message.content" :key="ind" @click.stop="optClick(opt.nextId)">
+            <div class="choose-option" v-for="(opt, ind) in message.content" :key="ind" v-waves @click.stop="optClick(opt.nextId, message.id)">
               {{ opt.option }}
             </div>
           </div>
         </div>
 <!--        旁白-->
-        <div v-else-if="DirectionEnum.旁白 === message.direction" class="cha-narration">{{ narration }}</div>
+        <div v-else-if="DirectionEnum.旁白 === message.direction" class="cha-narration">{{ message.content }}</div>
       </li>
       <div v-if="isShowFooter" class="footer">
         <img class="footer-tip" src="../../assets/images/divided.png" alt="">
-        <p class="footer-title">Download GoStory and start reading Hooked with CEO!</p>
+        <p class="footer-title">Download GoStory and start reading <br>《{{ bookName }}》</p>
         <img class="footer-hand" src="../../assets/images/hand.png" alt="">
       </div>
     </ul>
     <div class="play-btn">
-      <div class="btn" v-waves >Play Now</div>
+      <div class="btn" v-waves @click="emits('playNow')">Play Now</div>
     </div>
     <TapTip v-show="isShowTapTip"/>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { defineProps, nextTick, onMounted, PropType, ref } from "vue";
+import { defineEmits, defineProps, nextTick, onMounted, PropType, ref } from "vue";
 import { DirectionEnum, IDataSource, TypeEnum } from "@/components/dialogue/dialogue.interface";
 import audioUrl from '@/assets/default_bgm.mp3'
 import TapTip from './tapToContinue.vue'
@@ -78,9 +81,6 @@ const props = defineProps({
     type: String,
   },
   bookIntro: {
-    type: String,
-  },
-  narration: {
     type: String,
   },
   dataSource: {
@@ -95,6 +95,8 @@ const props = defineProps({
     type: Object as PropType<{name: string; url: string}>,
   },
 })
+
+const emits = defineEmits(['playNow'])
 
 const isShowFooter = ref(false); // 是否展示底部提示
 const isShowTapTip = ref(true); // 是否展示点击提示
@@ -164,13 +166,23 @@ const chatClick = (flag?: boolean) => {
   }
   scrollDown()
 }
+
+const optClickIds: Array<string | number> = [];
 // 选项点击
-const optClick = (nextId: string | number) => {
+const optClick = (nextId: string | number, id: string | number) => {
+  // 防止再点
+  if (optClickIds.indexOf(id) !== -1) {
+    chatClick()
+  } else {
+    optClickIds.push(id);
+  }
+
   const append = props.dataSource?.find(val => val.id === nextId);
   if (append) {
     list.value = [...list.value, append ]
   } else {
-    isShowFooter.value = true
+    isShowFooter.value = true;
+    emits('playNow')
   }
   scrollDown()
 }
