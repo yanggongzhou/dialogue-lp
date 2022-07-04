@@ -121,7 +121,7 @@ const aiPlay = () => {
 
 const aiPlay2 = () => {
   timer = setTimeout(() => {
-    if (!isShowTapTip.value) {
+    if (!isShowTapTip.value && list.value.length !== props.dataSource?.length) {
       isShowTapTip.value = true;
       aiPlay();
     }
