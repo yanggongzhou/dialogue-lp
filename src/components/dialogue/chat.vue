@@ -1,82 +1,132 @@
 <template>
-  <div v-waves @click="chatClick" class="chat-warp" :style="{backgroundColor: wrapBg}">
-    <div class="chat-header" v-if="list && list.length>0">
-      <p> {{ contactNickname }}</p>
-    </div>
+  <div class="chat-warp" @click="chatClick()">
+    <audio ref="musicRef" preload loop autoplay v-show="false">
+      <source :src="audioUrl" type="audio/mpeg">
+    </audio>
     <div class="chat-content">
-      <!-- main -->
-      <ul class="message">
-        <li v-for="message in list" :key="message.id"
-            :class="message.direction === DirectionEnum.主人 ?'an-move-right':'an-move-left'">
-          <p class="ctime">{{ message.ctime }}</p>
-          <div class="mainSelf" :class="message.direction === DirectionEnum.主人 ? 'rightSelf' : ''">
-            <img class="avatar" width="45" height="45" :src="message.direction===DirectionEnum.主人? ownerAvatarUrl: contactAvatarUrl"
-                 alt="">
-            <!-- 文本 -->
-            <div v-if="message.type===TypeEnum.文本" v-emotion="message.content" class="text"></div>
+      <div class="book-name">{{ bookName }}</div>
+      <img src="../../assets/images/bookHw.png" alt="">
+      <div class="bookIntro">{{ bookIntro }}</div>
+    </div>
 
+    <!-- main -->
+    <ul class="message">
+      <li v-for="message in list" :key="message.id"
+          :class="{
+            'an-move-right':message.direction === DirectionEnum.主人,
+            'an-move-left': message.direction === DirectionEnum.联系人
+          }">
+        <div
+          v-if="DirectionEnum.主人 === message.direction || DirectionEnum.联系人 === message.direction"
+          class="mainSelf" :class="message.direction === DirectionEnum.主人 ? 'rightSelf' : ''">
+          <img class="avatar" :src="message.direction===DirectionEnum.主人? owner.url: contact.url"
+               alt="">
+          <!-- 文本 -->
+          <div class="dialog-content">
+            <p class="role-name" v-show="message.direction">
+              {{ message.direction===DirectionEnum.主人? owner.name : contact.name }}
+            </p>
+            <div v-if="message.type===TypeEnum.文本" v-emotion="message.content" class="text"></div>
             <!-- 图片 -->
             <div class="text" v-else-if="message.type===TypeEnum.图片">
               <img :src="message.content" class="image" alt="聊天图片">
             </div>
           </div>
-        </li>
-      </ul>
+        </div>
+        <!-- 选项 -->
+        <div v-else-if="DirectionEnum.选项 === message.direction" class="chooseBox">
+          <div class="choose-tip">
+            <i></i>
+            <i></i>
+            <i>Please choose</i>
+            <i></i>
+            <i></i>
+          </div>
+          <div class="choose-title">
+            What choices will you make?
+          </div>
+          <div class="choose-content">
+            <div class="choose-option" v-for="(opt, ind) in message.content" :key="ind" @click.stop="optClick(opt.nextId)">
+              {{ opt.option }}
+            </div>
+          </div>
+        </div>
+<!--        旁白-->
+        <div v-else-if="DirectionEnum.旁白 === message.direction" class="cha-narration">{{ narration }}</div>
+      </li>
+      <div v-if="isShowFooter" class="footer">
+        <img class="footer-tip" src="../../assets/images/divided.png" alt="">
+        <p class="footer-title">Download GoStory and start reading Hooked with CEO!</p>
+        <img class="footer-hand" src="../../assets/images/hand.png" alt="">
+      </div>
+    </ul>
+    <div class="play-btn">
+      <div class="btn" v-waves >Play Now</div>
     </div>
+    <TapTip v-show="isShowTapTip"/>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, defineProps, watch, ref, nextTick, PropType } from "vue";
-import { IDataSource, DirectionEnum, TypeEnum } from "@/components/dialogue/dialogue.interface";
+import { defineProps, nextTick, onMounted, PropType, ref } from "vue";
+import { DirectionEnum, IDataSource, TypeEnum } from "@/components/dialogue/dialogue.interface";
+import audioUrl from '@/assets/default_bgm.mp3'
+import TapTip from './tapToContinue.vue'
+
 const props = defineProps({
-  contactNickname: {
+  bookName: {
     type: String,
-    default: 'Handsome man'
+  },
+  bookIntro: {
+    type: String,
+  },
+  narration: {
+    type: String,
   },
   dataSource: {
     type: Array as PropType<IDataSource[]>,
     required: true,
     default: [] as IDataSource[]
   },
-  wrapBg: {
-    type: String,
-    default: '#efefef'
+  owner: {
+    type: Object as PropType<{name: string; url: string}>,
   },
-  contactAvatarUrl: {
-    type: String,
-  },
-  ownerAvatarUrl: {
-    type: String,
+  contact: {
+    type: Object as PropType<{name: string; url: string}>,
   },
 })
+
+const isShowFooter = ref(false); // 是否展示底部提示
+const isShowTapTip = ref(true); // 是否展示点击提示
+const musicRef = ref<HTMLAudioElement>(); // 音乐ref
+let timer = ref<number>();
 
 const list = ref<IDataSource[]>([])
 
-watch(() => props.dataSource, (newVal) => {
-  list.value = [newVal[0]];
-})
-
 onMounted(() => {
-  list.value = [props.dataSource[0]];
+  list.value = props.dataSource?.slice(0, 3);
+  aiPlay();
 })
+// 自动播放
+const aiPlay = () => {
+  timer = setTimeout(() => {
+    if (isShowTapTip.value) {
+      chatClick(true)
+    }
+    aiPlay();
+  }, 5000)
+}
 
-const chatClick = () => {
-  const append = props.dataSource[list.value.length]
-  if (append) {
-    list.value = [...list.value, append ]
-  } else {
-    list.value = [
-      ...list.value,
-      {
-        direction: DirectionEnum.主人,
-        id: 1111, type: TypeEnum.文本,
-        content: '没了没了没了',
-        ctime: '6月21日 16:35'
-      }
-    ]
-  }
-
+const aiPlay2 = () => {
+  timer = setTimeout(() => {
+    if (!isShowTapTip.value) {
+      isShowTapTip.value = true;
+      aiPlay();
+    }
+  }, 5000)
+}
+// 自动定位
+const scrollDown = () => {
   nextTick(() => {
     const targetDom = document.querySelector('.message')?.lastElementChild
     if (targetDom && targetDom.scrollIntoView) {
@@ -84,152 +134,47 @@ const chatClick = () => {
     }
   })
 }
+
+// 页面点击
+const chatClick = (flag?: boolean) => {
+  if (!flag) {
+    isShowTapTip.value = false;
+    clearTimeout(timer);
+    aiPlay2()
+    if (musicRef.value && musicRef.value.paused) {
+      musicRef.value.currentTime = 0;
+      musicRef.value.play();
+    }
+  }
+
+  if (list.value[list.value.length - 1].direction === DirectionEnum.选项) return;
+  const append = props.dataSource[list.value.length]
+
+  if (list.value.length === props.dataSource?.length - 1) {
+    isShowFooter.value = true
+    clearTimeout(timer);
+    isShowTapTip.value = false;
+  }
+  if (append) {
+    list.value = [...list.value, append ]
+  } else {
+    isShowFooter.value = true
+    clearTimeout(timer);
+    isShowTapTip.value = false;
+  }
+  scrollDown()
+}
+// 选项点击
+const optClick = (nextId: string | number) => {
+  const append = props.dataSource?.find(val => val.id === nextId);
+  if (append) {
+    list.value = [...list.value, append ]
+  } else {
+    isShowFooter.value = true
+  }
+  scrollDown()
+}
+
 </script>
 
-<style lang="less" scoped>
-.chat-warp {
-  width: 100%;
-  height: 100%;
-  z-index: 100;
-  position: relative;
-  overflow: hidden;
-  .chat-header {
-    background: #000;
-    text-align: center;
-    color: #fff;
-    width: 100%;
-    height: 50px;
-    line-height: 50px;
-    font-size: 14px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 999;
-  }
-  .chat-content {
-    box-shadow: 1px 1px 20px -5px #000;
-    width: 100%;
-    background: #F5F5F5;
-    margin: 0 auto;
-    overflow: hidden;
-    padding: 0;
-    height: 100%;
-    position: relative;
-    z-index: 1;
-  }
-}
-
-.message {
-  height: 100%;
-  box-sizing: border-box;
-  padding: 50px 15px;
-  overflow-y: scroll;
-  background-color: #F5F5F5;
-  font-size: 12px;
-  text-align: center;
-  li {
-    margin-bottom: 15px;
-    left: 0;
-    position: relative;
-    display: block;
-  }
-
-  .ctime {
-    margin: 10px 0;
-    text-align: center;
-    display: inline-block;
-    padding: 0 5px;
-    font-size: 12px;
-    color: #fff;
-    border-radius: 2px;
-    background-color: #DADADA;
-  }
-  .mainSelf {
-    text-align: left;
-    .text {
-      display: inline-block;
-      position: relative;
-      max-width: calc(100% - 75px);
-      min-height: 35px;
-      line-height: 2.1;
-      font-size: 15px;
-      padding: 6px 10px;
-      text-align: left;
-      word-break: break-all;
-      background-color: #fff;
-      color: #000;
-      border-radius: 4px;
-      box-shadow: 0 1px 7px -5px #000;
-      &::before {
-        content: " ";
-        position: absolute;
-        top: 9px;
-        right: 100%;
-        border: 6px solid transparent;
-        border-right-color: #fff;
-      }
-    }
-    .avatar {
-      float: left;
-      margin: 0 10px 0 0;
-      border-radius: 3px;
-      background: #fff;
-    }
-    .image {
-      max-width: 200px;
-    }
-  }
-
-  .rightSelf {
-    text-align: right;
-    .text {
-      background-color: #9EEA6A;
-      &::before {
-        right: inherit;
-        left: 100%;
-        border-right-color: transparent;
-        border-left-color: #9EEA6A;
-      }
-    }
-    .avatar {
-      float: right;
-      margin: 0 0 0 10px;
-    }
-  }
-}
-
-.an-move-left {
-  left: 0;
-  animation: moveLeft .7s ease;
-  -webkit-animation: moveLeft .7s ease;
-}
-
-.an-move-right {
-  left: 0;
-  animation: moveRight .7s ease;
-  -webkit-animation: moveRight .7s ease;
-}
-
-@keyframes moveRight {
-  0% {
-    left: -20px;
-    opacity: 0
-  }
-  100% {
-    left: 0;
-    opacity: 1
-  }
-}
-
-@keyframes moveLeft {
-  0% {
-    left: 20px;
-    opacity: 0
-  }
-  100% {
-    left: 0;
-    opacity: 1
-  }
-}
-
-</style>
+<style src="./index.less" lang="less" scoped></style>

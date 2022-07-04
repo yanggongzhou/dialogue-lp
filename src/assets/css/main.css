@@ -73,3 +73,28 @@ a{
   background-color: rgba(213,213,213,0.73);
   border-radius: 5px;
 }
+
+@font-face {
+  font-family: 'Poppins-SemiBold';
+  src: url(../font/Poppins-SemiBold.ttf);
+}
+
+@font-face {
+  font-family: 'Poppins-Medium';
+  src: url(../font/Poppins-Medium.ttf);
+}
+
+@font-face {
+  font-family: 'Poppins-MediumItalic';
+  src: url(../font/Poppins-MediumItalic.ttf);
+}
+
+@font-face {
+  font-family: 'Poppins-Regular';
+  src: url(../font/Poppins-Regular.ttf);
+}
+
+@font-face {
+  font-family: 'Poppins-Italic';
+  src: url(../font/Poppins-Italic.ttf);
+}
