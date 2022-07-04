@@ -139,7 +139,7 @@ const scrollDown = () => {
 }
 
 // 页面点击
-const chatClick = (flag?: boolean) => {
+const chatClick = async (flag?: boolean) => {
   if (!flag) {
     isShowTapTip.value = false;
     clearTimeout(timer);
@@ -173,11 +173,11 @@ const chatClick = (flag?: boolean) => {
 
 const optClickIds: Array<string | number> = [];
 // 选项点击
-const optClick = (opt: {nextId: string | number; option: string}, id: string | number) => {
+const optClick = async (opt: {nextId: string | number; option: string}, id: string | number) => {
   const { nextId, option } = opt;
   // 防止再点
   if (optClickIds.indexOf(id) !== -1) {
-    chatClick()
+    await chatClick()
   } else {
     optClickIds.push(id);
   }

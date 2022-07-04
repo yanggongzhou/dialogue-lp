@@ -83,7 +83,7 @@ const updateNode = () => {
 
 const choiceLookEvent = (state: 'left' | 'right') => {
   if (state === 'left') {
-
+    console.log('left')
   }
   console.info('切换look', state)
 }
