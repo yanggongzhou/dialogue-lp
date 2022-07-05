@@ -1,6 +1,6 @@
 <template>
   <div class="chat-warp" @click="chatClick()">
-<!--    遮罩-->
+    <!--遮罩-->
     <div class="zhezhao"></div>
     <audio ref="musicRef" preload loop autoplay v-show="false">
       <source :src="audioUrl" type="audio/mpeg">
@@ -10,7 +10,6 @@
       <img src="../../assets/images/bookHw.png" alt="">
       <div class="bookIntro">{{ bookIntro }}</div>
     </div>
-
     <!-- main -->
     <ul class="message">
       <li v-for="message in list" :key="message.id"
@@ -26,7 +25,7 @@
           <!-- 文本 -->
           <div class="dialog-content">
             <p class="role-name" v-show="message.direction">
-              {{ message.direction===DirectionEnum.主人? owner.name : contact.name }}
+              {{ message.direction === DirectionEnum.主人 ? owner.name : contact.name }}
             </p>
             <div v-if="message.type===TypeEnum.对话" class="text">{{ message.content }}</div>
             <div v-else-if="message.type===TypeEnum.独白" class="monologue">{{ message.content }}</div>
@@ -49,12 +48,13 @@
             {{ message?.choiceTitle }}
           </div>
           <div class="choose-content">
-            <div class="choose-option" v-for="(opt, ind) in message.content" :key="ind" v-waves @click.stop="optClick(opt, message.id)">
+            <div class="choose-option" v-for="(opt, ind) in message.content" :key="ind" v-waves
+                 @click.stop="optClick(opt, message.id)">
               {{ opt.option }}
             </div>
           </div>
         </div>
-<!--        旁白-->
+        <!--        旁白-->
         <div v-else-if="DirectionEnum.旁白 === message.direction" class="cha-narration">{{ message.content }}</div>
       </li>
       <div v-if="isShowFooter" class="footer">
@@ -90,10 +90,10 @@ const props = defineProps({
     default: [] as IDataSource[]
   },
   owner: {
-    type: Object as PropType<{name: string; url: string}>,
+    type: Object as PropType<{ name: string; url: string }>,
   },
   contact: {
-    type: Object as PropType<{name: string; url: string}>,
+    type: Object as PropType<{ name: string; url: string }>,
   },
 })
 
@@ -162,7 +162,7 @@ const chatClick = async (flag?: boolean) => {
     isShowTapTip.value = false;
   }
   if (append) {
-    list.value = [...list.value, append ]
+    list.value = [...list.value, append]
   } else {
     isShowFooter.value = true
     clearTimeout(timer);
@@ -173,7 +173,7 @@ const chatClick = async (flag?: boolean) => {
 
 const optClickIds: Array<string | number> = [];
 // 选项点击
-const optClick = async (opt: {nextId: string | number; option: string}, id: string | number) => {
+const optClick = async (opt: { nextId: string | number; option: string }, id: string | number) => {
   const { nextId, option } = opt;
   // 防止再点
   if (optClickIds.indexOf(id) !== -1) {
@@ -184,7 +184,7 @@ const optClick = async (opt: {nextId: string | number; option: string}, id: stri
 
   const append = props.dataSource?.find(val => val.id === nextId);
   if (append) {
-    list.value = [...list.value, append ]
+    list.value = [...list.value, append]
     await gostoryLog({ action: 3 }, 'story_user_click')
   } else {
     isShowFooter.value = true;

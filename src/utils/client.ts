@@ -10,6 +10,7 @@ function GetQueryString(name: string) {
     return unescape(r[2]);
   }
 }
+
 function randomString() {
   const len = 16;
   const $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';
@@ -121,17 +122,18 @@ export const gostoryLog = async (data: any, eventType: string) => {
     type: 'luodiye',
     event: eventType,
     data: {
-      ...adjustObj,
-      ...data,
       type: 'gs_luodiye_dialogue',
       action: 3, // 1 pv | 2 按钮点击下载
       planId: GetQueryString("utm_content") || '0',
       planName: GetQueryString("utm_campaign") || '0',
       clipboard: adjustObj,
+      ...adjustObj,
+      ...data,
     },
   }
   try {
-    await axios({ method: 'get', url: 'https://log.gostory.com/h5_standard_final_log.php',
+    await axios({
+      method: 'get', url: 'https://log.gostory.com/h5_standard_final_log.php',
       params: { json: JSON.stringify(logData) }
     })
     console.log('打点成功')
@@ -149,7 +151,6 @@ const getDataLoad = async () => {
     }
     await gostoryLog({ status: res.status }, 'event_remote_success');
   } catch (err) {
-    console.log('err------->', err)
     adjustObj.ip = "0.0.0.0";
     await gostoryLog({}, 'event_remote_err');
   } finally {
@@ -157,9 +158,8 @@ const getDataLoad = async () => {
   }
 }
 
-export const getCopyText = async ():Promise<string> => {
+export const getCopyText = async (): Promise<string> => {
   await getDataLoad();
   refreshAdjustObj();
-  console.log('adjustObj------------->', adjustObj)
   return "gsb_" + compile(adjustObj);
 }

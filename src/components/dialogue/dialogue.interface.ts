@@ -1,4 +1,3 @@
-
 export enum TypeEnum {
   对话 = 1,
   独白 = 2,
@@ -16,6 +15,6 @@ export interface IDataSource {
   direction: DirectionEnum;
   id: number | string;
   type?: TypeEnum;
-  content: string | Array<{nextId: string | number, option: string}>; // type==1--文本消息，type==3--图片地址；direction==3--选项
+  content: string | Array<{ nextId: string | number, option: string }>; // type==1--文本消息，type==3--图片地址；direction==3--选项
   choiceTitle?: string;
 }

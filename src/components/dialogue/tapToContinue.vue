@@ -15,13 +15,15 @@
   position: fixed;
   height: 1.6rem;
   text-align: center;
-  top: calc(50vh - 0.8rem);
+  bottom: 1.3rem;
   font-size: 0;
+
   img {
     width: 0.72rem;
     height: 1.12rem;
     animation: visible1 1.3s infinite;
   }
+
   p {
     font-size: 0.26rem;
     font-family: Poppins-Medium;
