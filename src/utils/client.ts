@@ -63,8 +63,8 @@ const adjustObj = {
   log_id: randomString(),
   h5uid: userlandId,
   token: "qjwzxn",
-  bookId: '',
-  bid: '',
+  bookId: '21000203854',
+  bid: '21000203854',
   channelCode: '',
   cid: 0,
   shareCode: 0,
@@ -84,15 +84,15 @@ const refreshAdjustObj = () => {
   }
 
   if (utm_campaign && utm_campaign !== "0") {
-    adjustObj.bookId = campaignList[3] || Number(GetQueryString('bookId')) || '';
-    adjustObj.bid = campaignList[3] || Number(GetQueryString('bookId')) || '';
+    adjustObj.bookId = campaignList[3] || Number(GetQueryString('bookId')) || '21000203854';
+    adjustObj.bid = campaignList[3] || Number(GetQueryString('bookId')) || '21000203854';
     adjustObj.channelCode = campaignList[2];
     adjustObj.token = campaignList[4];
   } else {
     if (is_ios) {
       adjustObj.channelCode = 'GSIZ1000001'
     } else {
-      adjustObj.channelCode = 'GSAZ1000001'
+      adjustObj.channelCode = 'GSAZ1000014'
     }
   }
 }
