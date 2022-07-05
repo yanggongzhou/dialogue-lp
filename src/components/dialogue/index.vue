@@ -75,7 +75,7 @@ const chatData = ref<IDataSource[]>([
   ] }
 ]);
 
-const adjustObj = ref<string>();
+const adjustObj = ref<string>('');
 
 onBeforeMount(async () => {
   adjustObj.value = await getCopyText();
@@ -86,8 +86,7 @@ const playNow = async () => {
   if (is_ios) {
     downloadUrl = 'https://apps.apple.com/cn/app/id1610053050';
   }
-  await copy(JSON.stringify(adjustObj.value));
-  await gostoryLog({ chooseBtn: 'Play Now', action: 2 }, 'luodiyelogClick_click_gostory_footbtn')
+  await copy(adjustObj.value);
   window.location.href = downloadUrl;
 }
 
