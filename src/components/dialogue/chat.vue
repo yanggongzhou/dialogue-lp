@@ -100,7 +100,7 @@ const emits = defineEmits(['playNow'])
 const isShowFooter = ref(false); // 是否展示底部提示
 const isShowTapTip = ref(true); // 是否展示点击提示
 const musicRef = ref<HTMLAudioElement>(); // 音乐ref
-let timerArr: number[] = [];
+let timer = 0;
 
 const list = ref<IDataSource[]>([])
 
@@ -108,30 +108,13 @@ onMounted(() => {
   list.value = props.dataSource?.slice(0, 3);
   aiPlay();
 })
-// 自动播放
-const aiPlay = () => {
-  const timer = setTimeout(() => {
-    if (isShowTapTip.value) {
-      if (list.value[list.value.length - 1].direction === DirectionEnum.选项) {
-        const data = list.value[list.value.length - 1]
-        optClick(data.content[0], data.id, true)
-      } else {
-        chatClick(true)
-      }
-    }
-    aiPlay();
-  }, 5000)
-  timerArr.push(timer)
-}
 
-const aiPlay2 = () => {
-  const timer = setTimeout(() => {
+const aiPlay = () => {
+  timer = setTimeout(() => {
     if (!isShowTapTip.value && list.value.length !== props.dataSource?.length) {
       isShowTapTip.value = true;
-      aiPlay();
     }
   }, 5000)
-  timerArr.push(timer)
 }
 // 自动定位
 const scrollDown = () => {
@@ -143,42 +126,29 @@ const scrollDown = () => {
   })
 }
 
-const clearTimer = () => {
-  timerArr.forEach(val => clearTimeout(val));
-  timerArr = [];
-}
-
 // 页面点击
-const chatClick = async (flag?: boolean) => {
-  if (!flag) {
-    isShowTapTip.value = false;
-    clearTimer()
-    aiPlay2()
-    if (musicRef.value && musicRef.value.paused) {
-      musicRef.value.currentTime = 0;
-      musicRef.value.play();
-    }
+const chatClick = async () => {
+  isShowTapTip.value = false;
+  clearTimeout(timer);
+  aiPlay()
+  if (musicRef.value && musicRef.value.paused) {
+    musicRef.value.currentTime = 0;
+    musicRef.value.play();
   }
 
   if (list.value[list.value.length - 1].direction === DirectionEnum.选项) return;
 
-  if (!flag) {
-    await gostoryLog({ action: 3 }, 'story_user_click')
-  } else {
-    await gostoryLog({ action: 3 }, 'story_auto_click')
-  }
+  await gostoryLog({ action: 3 }, 'story_user_click')
   const append = props.dataSource[list.value.length]
 
   if (list.value.length === props.dataSource?.length - 1) {
     isShowFooter.value = true
-    clearTimer()
     isShowTapTip.value = false;
   }
   if (append) {
     list.value = [...list.value, append]
   } else {
     isShowFooter.value = true
-    clearTimer()
     isShowTapTip.value = false;
   }
   scrollDown()
@@ -186,7 +156,8 @@ const chatClick = async (flag?: boolean) => {
 
 const optClickIds: Array<string | number> = [];
 // 选项点击
-const optClick = async (opt: { nextId: string | number; option: string }, id: string | number, flag?: boolean) => {
+const optClick = async (opt: { nextId: string | number; option: string }, id: string | number) => {
+  clearTimeout(timer);
   const { nextId, option } = opt;
   // 防止再点
   if (optClickIds.indexOf(id) !== -1) {
@@ -198,12 +169,7 @@ const optClick = async (opt: { nextId: string | number; option: string }, id: st
   const append = props.dataSource?.find(val => val.id === nextId);
   if (append) {
     list.value = [...list.value, append]
-    if (flag) {
-      await gostoryLog({ action: 3 }, 'story_auto_click')
-    } else {
-      await gostoryLog({ action: 3 }, 'story_user_click')
-    }
-
+    await gostoryLog({ action: 3 }, 'story_user_click')
   } else {
     isShowFooter.value = true;
     emits('playNow')
