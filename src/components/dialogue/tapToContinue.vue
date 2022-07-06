@@ -1,6 +1,6 @@
 <template>
   <div class="tapTipBox">
-    <img src="../../assets/images/tap-tip.png" alt="">
+    <img src="../../assets/images/ic_tap.png" alt="">
     <p>Tap to Continue</p>
   </div>
 </template>
@@ -11,26 +11,29 @@
 
 <style lang="less" scoped>
 .tapTipBox {
-  width: 100%;
   position: fixed;
-  height: 1.6rem;
   text-align: center;
-  bottom: 1.3rem;
+  left: calc(50% - 1.2rem);
+  bottom: 1.38rem;
   font-size: 0;
-  left: 0;
+  width: 2.4rem;
+  height: 1.70rem;
+  background: #0000007F;
+  border-radius: 0.16rem;
 
   img {
-    width: 0.72rem;
-    height: 1.12rem;
+    margin: 0.16rem 0 0.08rem;
+    width: 0.9rem;
+    height: 0.9rem;
     animation: visible1 1.3s infinite;
   }
 
   p {
-    font-size: 0.26rem;
+    font-size: 0.24rem;
     font-family: Poppins-Medium;
     font-weight: 500;
-    color: #4D2B3C;
-    line-height: 0.48rem;
+    color: #FFFFFF;
+    line-height: 0.40rem;
   }
 }
 
