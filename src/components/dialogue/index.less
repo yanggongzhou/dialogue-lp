@@ -141,18 +141,8 @@
         line-height: 0.4rem;
         text-align: left;
         background: #FF007E26;
-        border-radius: 0.24rem;
+        border-radius: 0 0.24rem 0.24rem 0.24rem;
         color: #4D2B3C;
-
-        &::before {
-          content: " ";
-          position: absolute;
-          top: 0.22rem;
-          border: 0.14rem solid transparent;
-          border-right-color: #FF007E26;
-          right: 100%;
-          //border-left-color: #FF007E26;
-        }
       }
 
       .monologue {
@@ -203,19 +193,13 @@
       .text {
         background: #FF007E;
         color: #FFFFFFE5;
-
-        &::before {
-          top: 0.32rem;
-          border: 0.14rem solid transparent;
-          left: 100%;
-          border-left-color: #FF007E;
-        }
+        border-radius: 0.24rem 0 0.24rem 0.24rem;
       }
 
       .monologue {
         background: #FF007E;
         color: #FFFFFFE5;
-
+        border-radius: 0.24rem;
 
         &::before {
           left: 3.74rem;
@@ -233,56 +217,49 @@
       display: flex;
       align-items: center;
       justify-content: center;
-
       i {
         display: inline-block;
       }
-
-      i:nth-child(1) {
-        width: 1.2rem;
-        height: 2px;
-        background: linear-gradient(90deg, #FFF3F9 0%, #F0BEA4 100%);
-        border-radius: 1px;
+      i:nth-child(1),  i:nth-child(3) {
+        width: 1.32rem;
+        height: 0.04rem;
+        transform: rotate(180deg);
+        background: url("../../assets/images/dividingline.png") no-repeat;
+        background-size: 100% 100%;
       }
 
-      i:nth-child(2), i:nth-child(4) {
-        width: 4px;
-        height: 4px;
-        background: #F0BEA4;
-        margin: 0 0.08rem;
-      }
-
-      i:nth-child(3) {
+      i:nth-child(2) {
         font-style: normal;
-        width: 1.74rem;
+        width: 1.9rem;
         height: 0.4rem;
         font-size: 0.24rem;
+        font-family: Poppins-Medium;
         font-weight: 500;
         color: #4D2B3C;
         line-height: 0.4rem;
+        margin: 0 0.08rem;
+        text-align: center;
       }
 
-      i:nth-child(5) {
-        width: 1.2rem;
-        height: 2px;
-        background: linear-gradient(90deg, #F0BEA4 0%, #FFF3F9 100%);
-        border-radius: 1px;
+      i:nth-child(3) {
+        transform: rotate(0deg);
       }
     }
 
     .choose-title {
       width: 5.42rem;
+      height: 1.28rem;
       border: 0.08rem solid #FF007E;
-      background: #FF007E26;
-      border-radius: 24px;
-      opacity: 0.7;
+      background: #fde3f2;
+      border-radius: 0.24rem;
       padding: 0.16rem 0.24rem;
       box-sizing: border-box;
       margin: 0.24rem auto 0.16rem;
       font-size: 0.26rem;
       font-weight: 500;
       color: #4D2B3C;
-      line-height: 0.4rem;
+      display: flex;
+      align-items: center;
       text-align: left;
     }
 

@@ -17,6 +17,7 @@
   text-align: center;
   bottom: 1.3rem;
   font-size: 0;
+  left: 0;
 
   img {
     width: 0.72rem;

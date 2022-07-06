@@ -39,9 +39,7 @@
         <div v-else-if="DirectionEnum.选项 === message.direction" class="chooseBox">
           <div class="choose-tip">
             <i></i>
-            <i></i>
             <i>Please choose</i>
-            <i></i>
             <i></i>
           </div>
           <div class="choose-title">
