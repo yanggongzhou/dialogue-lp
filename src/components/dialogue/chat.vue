@@ -57,7 +57,7 @@
       </li>
       <div v-if="isShowFooter" class="footer">
         <img class="footer-tip" src="../../assets/images/divided.png" alt="">
-        <p class="footer-title">Download GoStory and start reading <br>《{{ bookName }}》</p>
+        <p class="footer-title">Download GoStory and start reading <br><span>{{ bookName }}</span></p>
         <img class="footer-hand" src="../../assets/images/hand.png" alt="">
       </div>
     </ul>
@@ -69,7 +69,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineEmits, defineProps, nextTick, onMounted, PropType, ref } from "vue";
+import { defineEmits, defineProps, nextTick, onBeforeUnmount, onMounted, PropType, ref } from "vue";
 import { DirectionEnum, IDataSource, TypeEnum } from "@/components/dialogue/dialogue.interface";
 import audioUrl from '@/assets/default_bgm.mp3'
 import TapTip from './tapToContinue.vue'
@@ -107,7 +107,25 @@ const list = ref<IDataSource[]>([])
 onMounted(() => {
   list.value = props.dataSource?.slice(0, 3);
   aiPlay();
+  document.addEventListener("visibilitychange", domVisibilitychange);
 })
+
+onBeforeUnmount(() => {
+  document.removeEventListener("visibilitychange", domVisibilitychange)
+})
+
+const domVisibilitychange = () => {
+  if (document.visibilityState === 'visible') {
+    if (musicRef.value && musicRef.value.paused) {
+      musicRef.value.currentTime = 0;
+      musicRef.value.play();
+    }
+  } else {
+    if (musicRef.value) {
+      musicRef.value.pause();
+    }
+  }
+}
 
 const aiPlay = () => {
   timer = setTimeout(() => {

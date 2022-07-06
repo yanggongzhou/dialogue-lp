@@ -21,14 +21,14 @@ import ownerImg from '@/assets/images/owner.png';
 import { copy } from "@/utils/clipboard";
 
 const params = reactive({
-  bookName: 'Hooked with CEO!',
+  bookName: 'Hooked with CEO',
   bookIntro: 'In real life, you have a secret crush on your dad\'s best friend, Roman Lewis, the handsome CEO. Meanwhile, you\'re develping a darker side of you with Daddy4Love on the Internet. How far away will you let your fantasies run wild?',
   owner: {
-    name: 'Yara Barros',
+    name: 'Lolita',
     url: ownerImg
   },
   contact: {
-    name: 'Diana Campos',
+    name: 'Roman',
     url: contactImg
   }
 })
@@ -36,7 +36,7 @@ const params = reactive({
 const chatData = ref<IDataSource[]>([
   { direction: DirectionEnum.主人, id: 1, type: TypeEnum.独白, content: 'Sitting awkwardly among other graduates with their beaming, chattering parents, I suffer in silence, alone.' },
   { direction: DirectionEnum.旁白, id: 2, content: 'You are on the dean\'s list this year.  President wants to invite your parents to give a speech.' },
-  { direction: DirectionEnum.联系人, id: 3, type: TypeEnum.对话, content: 'Soon there\'ll be one less pedestrian in the World!' },
+  { direction: DirectionEnum.主人, id: 3, type: TypeEnum.对话, content: 'I\'m sorry, President Faust, my parents...they are tied up with work.' },
   { direction: DirectionEnum.旁白, id: 4, content: ' \'\'Obviously, busy citizens breed excellent graduates. \'\' President said.' },
   { direction: DirectionEnum.联系人, id: 5, type: TypeEnum.对话, content: 'As her father\'s best friend, I believe I bear witness to Lolita\'s fine development in this marvelous school.' },
   { direction: DirectionEnum.联系人, id: 6, type: TypeEnum.对话, content: 'Don\'t worry, little girl. I\'ll take you through this.' },
@@ -55,7 +55,7 @@ const chatData = ref<IDataSource[]>([
   { direction: DirectionEnum.主人, id: 19, type: TypeEnum.独白, content: 'Roman Lewis. Roman effing Lewis. Unfortunately for me, my Dad’s best friend…' },
   { direction: DirectionEnum.旁白, id: 20, content: 'He runs his thumb down your cheek and along your jawline, touching you as comfortably as if you’ve been lovers for years.' },
   { direction: DirectionEnum.选项, id: 21, choiceTitle: 'I should...', content: [
-    { nextId: 22, option: 'Encourage him.' },
+    { nextId: 22, option: 'Encourage him. √' },
     { nextId: 22, option: 'Push him away.' }
   ] },
   { direction: DirectionEnum.主人, id: 22, type: TypeEnum.对话, content: 'I\'m yours...my body is yours...' },
